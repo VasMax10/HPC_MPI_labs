@@ -407,7 +407,7 @@ int main(int argc, char *argv[])
     if (ProcRank == 0)
     {
         printf("Parallel Gauss algorithm for solving linear systems\n");
-        std::cout << "Number of processes = " << ProcNum << std::endl;
+        printf("Number of processes = %d \n", ProcNum);
         // Size = ;
         Size = atoi(argv[1]);
     }

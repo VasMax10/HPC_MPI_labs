@@ -13,8 +13,8 @@ gen:
 
 run:
 	./serial $(size)
-	mpirun --oversubscribe -np 2 ./parallel $(size) 
-	mpirun --oversubscribe -np 4 ./parallel $(size) 
+	mpirun -np 2 ./parallel $(size) 
+	mpirun -np 4 ./parallel $(size) 
 
 clean:
 	rm -f matrix$(size).txt vector$(size).txt

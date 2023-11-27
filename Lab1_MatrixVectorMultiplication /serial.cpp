@@ -21,6 +21,9 @@ void ReadDataInitialization(double *pMatrix, double *pVector, int Size)
     {
         fin2 >> pVector[i];
     }
+
+    fin.close();
+    fin2.close();
 }
 // Function for random setting the matrix and vector elements
 void RandomDataInitialization(double *pMatrix, double *pVector, int Size)

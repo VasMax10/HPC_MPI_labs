@@ -43,6 +43,7 @@ void SaveMatrix(double *pMatrix, int RowCount, int ColCount, std::string filenam
             fout << std::fixed << std::setprecision(4) << pMatrix[i * ColCount + j] << " ";
         }
     }
+    fout.close();
 }
 
 int main(int argc, char *argv[])

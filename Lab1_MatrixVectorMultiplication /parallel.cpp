@@ -26,6 +26,9 @@ void ReadDataInitialization(double *pMatrix, double *pVector, int Size)
     {
         fin2 >> pVector[i];
     }
+
+    fin.close();
+    fin2.close();
 }
 // Function for memory allocation and data initialization
 void ProcessInitialization(double *&pMatrix, double *&pVector,
@@ -56,7 +59,9 @@ void DataDistribution(double *pMatrix, double *pProcRows, double *pVector,
     int *pSendNum;       // the number of elements sent to the process
     int *pSendInd;       // the index of the first data element sent to the process
     int RestRows = Size; // Number of rows, that haven�t been distributed yet
+
     MPI_Bcast(pVector, Size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+
     // Alloc memory for temporary objects
     pSendInd = new int[ProcNum];
     pSendNum = new int[ProcNum];
@@ -76,14 +81,9 @@ void DataDistribution(double *pMatrix, double *pProcRows, double *pVector,
         start = std::chrono::system_clock::now();
     // Scatter the rows
     // MPI_Scatterv(pMatrix, pSendNum, pSendInd, MPI_DOUBLE, pProcRows, pSendNum[ProcRank], MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    
-    int sendCount = pSendNum[ProcRank]; // Number of elements to send to each process
 
-    MPI_Scatter(pMatrix, sendCount, MPI_DOUBLE, pProcRows, sendCount, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-    
-    // MPI_Scatter(pMatrix, Size * Size / ProcNum, MPI_DOUBLE, pProcRows,
-    //             Size * Size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
+    MPI_Scatterv(pMatrix, pSendNum, pSendInd, MPI_DOUBLE, pProcRows,
+                 pSendNum[ProcRank], MPI_DOUBLE, 0, MPI_COMM_WORLD);
     if (ProcRank == 0)
     {
         auto end = std::chrono::system_clock::now();
@@ -120,7 +120,7 @@ void ResultReplication(double *pProcResult, double *pResult, int Size,
     // Gather the whole result vector on every processor
     MPI_Allgatherv(pProcResult, pReceiveNum[ProcRank], MPI_DOUBLE, pResult,
                    pReceiveNum, pReceiveInd, MPI_DOUBLE, MPI_COMM_WORLD);
-    
+
     // Free the memory
     delete[] pReceiveNum;
     delete[] pReceiveInd;

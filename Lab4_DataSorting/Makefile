@@ -1,3 +1,5 @@
+# size = 100
+
 all: clean build gen run
 std: build run
 
@@ -11,7 +13,8 @@ gen:
 
 run:
 	./serial $(size)
-	mpirun -n 4 ./parallel $(size) 
+	mpirun -np 2 ./parallel $(size) 
+	mpirun -np 4 ./parallel $(size) 
 
 clean:
-	rm -f AMatrix$(size).txt BMatrix$(size).txt
+	rm -f data$(size).txt
